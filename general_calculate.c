@@ -9,19 +9,20 @@ void numcpy(char[], char[]);
 
 // declaration
 int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char historys[3][MAX_LENGTH], int historys_SF[], bool historys_sign[], char result[]);
-int sum (char[], int, bool, char[], int, bool, char[]);
-int multiple (char[], int, bool, char[], int, bool, char[]);
+int sum(char[], int, bool, char[], int, bool, char[]);
+int multiple(char[], int, bool, char[], int, bool, char[]);
 int divide(char[], int, bool, char[], int, bool, char[]);
 int get_remainder(char[], int, bool, char[], int, bool, char[]);
 void sign_processing(char[], int, bool); // value of array changes by sign.
 void convert_bit_order(char array[], int SF);
 
 // definition
-int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char historys[3][MAX_LENGTH], int historys_SF[], bool historys_sign[], char result[]) {
+int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char historys[3][MAX_LENGTH], int historys_SF[], bool historys_sign[], char result[])
+{
 	int i;
 
 	char init[MAX_LENGTH];
-	for ( i = 0; i < MAX_LENGTH; i++ )
+	for (i = 0; i < MAX_LENGTH; i++)
 		init[i] = -48;
 
 	char buffer[MAX_LENGTH];
@@ -44,30 +45,38 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 
 	char temp[MAX_LENGTH];
 
-	static char int_MAX[MAX_LENGTH] = {2, 1, 4, 7, 4, 8, 3, 6, 4, -1, -48}; // it will be used when processed # operator.	
-	
-	for ( i = 0 ; i < 50; i++ )
-		operands_sign[i] = true; // prepare for unary.
-	for ( index_pointer = 0; index_pointer < 100 && input[index_pointer] == ' '; index_pointer++ ) // short circuit evaluate prevents core dump : out of index
+	static char int_MAX[MAX_LENGTH] = {2, 1, 4, 7, 4, 8, 3, 6, 4, -1, -48}; // it will be used when processed # operator.
+
+	for (i = 0; i < 50; i++)
+		operands_sign[i] = true;																 // prepare for unary.
+	for (index_pointer = 0; index_pointer < 100 && input[index_pointer] == ' '; index_pointer++) // short circuit evaluate prevents core dump : out of index
 		;
-	if ( input[index_pointer] >= 'a' && input[index_pointer] <= 'e' ) {
+	if (input[index_pointer] >= 'a' && input[index_pointer] <= 'e')
+	{
 		previous_operation_element = 1;
 		numcpy(operands[operand_pointer], vars[input[index_pointer] - 'a']);
 		operands_SF[operand_pointer] = vars_SF[input[index_pointer] - 'a'];
 		operands_sign[operand_pointer] = vars_sign[input[index_pointer] - 'a'];
 		operand_pointer++;
-	} else if ( input[index_pointer] >= 'A' && input[index_pointer] <= 'E' ) {
+	}
+	else if (input[index_pointer] >= 'A' && input[index_pointer] <= 'E')
+	{
 		previous_operation_element = 1;
 		numcpy(operands[operand_pointer], vars[input[index_pointer] - 'A']);
 		operands_SF[operand_pointer] = vars_SF[input[index_pointer] - 'A'];
 		operands_sign[operand_pointer] = vars_sign[input[index_pointer] - 'A'];
 		operand_pointer++;
-	} else if ( input[index_pointer] >= '1' && input[index_pointer] <= '9' ) { // why doesn't '0' enter this condition? => the first 0 refers to octal numeral, that isn't professor's request.
+	}
+	else if (input[index_pointer] >= '1' && input[index_pointer] <= '9')
+	{ // why doesn't '0' enter this condition? => the first 0 refers to octal numeral, that isn't professor's request.
 		previous_operation_element = 2;
 		buffer[buffer_SF] = input[index_pointer] - 48;
 		buffer_SF++;
-	} else {
-		switch ( input[index_pointer] ) { // set of single characters
+	}
+	else
+	{
+		switch (input[index_pointer])
+		{ // set of single characters
 		case '0':
 			previous_operation_element = 1;
 			numcpy(operands[operand_pointer], buffer);
@@ -77,15 +86,16 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 			break;
 		case 'H':
 		case 'h':
-			if ( index_pointer != 99 && input[index_pointer+1] >= '1' && input[index_pointer+1] <= '3' ) { // SCE prevents core dump.
+			if (index_pointer != 99 && input[index_pointer + 1] >= '1' && input[index_pointer + 1] <= '3')
+			{ // SCE prevents core dump.
 				previous_operation_element = 1;
 				index_pointer++;
 				numcpy(operands[operand_pointer], historys[input[index_pointer] - '1']);
 				operands_SF[operand_pointer] = historys_SF[input[index_pointer] - '1'];
 				operands_sign[operand_pointer] = historys_sign[input[index_pointer] - '1'];
 				operand_pointer++;
-
-			} else
+			}
+			else
 				return -1;
 			break;
 		// case '+':
@@ -98,89 +108,111 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 			return -1;
 		}
 	}
-	for ( index_pointer++; index_pointer < 100 && input[index_pointer] != 0; index_pointer++ ) { // short circuit evaluate prevents core dump : out of index
-		for ( ; index_pointer < 100; index_pointer++ ) {
-			if ( input[index_pointer] == ' ' ) {
-				if ( previous_operation_element == 2 ) {
+	for (index_pointer++; index_pointer < 100 && input[index_pointer] != 0; index_pointer++)
+	{ // short circuit evaluate prevents core dump : out of index
+		for (; index_pointer < 100; index_pointer++)
+		{
+			if (input[index_pointer] == ' ')
+			{
+				if (previous_operation_element == 2)
+				{
 					previous_operation_element = 1;
 					// flush
-					
+
 					numcpy(operands[operand_pointer], buffer);
 					operands_SF[operand_pointer] = buffer_SF;
 					// the sign cannot be distinguished by only number not including others.
-					
+
 					// buffer initialize
 					numcpy(buffer, init);
 					buffer_SF = 0;
 
 					operand_pointer++;
-						
 				}
-			} else {
+			}
+			else
+			{
 				break;
 			}
 		}
-		if ( index_pointer == 100 || input[index_pointer] == 0 )
+		if (index_pointer == 100 || input[index_pointer] == 0)
 			break;
-		if ( input[index_pointer] >= 'a' && input[index_pointer] <= 'e' ) {
-			if ( previous_operation_element )
+		if (input[index_pointer] >= 'a' && input[index_pointer] <= 'e')
+		{
+			if (previous_operation_element)
 				return -1;
 			previous_operation_element = 1;
 			numcpy(operands[operand_pointer], vars[input[index_pointer] - 'a']);
 			operands_SF[operand_pointer] = vars_SF[input[index_pointer] - 'a'];
-			operands_sign[operand_pointer] = ( vars_sign[input[index_pointer] - 'a'] == operands_sign[operand_pointer] ) ? true : false;
+			operands_sign[operand_pointer] = (vars_sign[input[index_pointer] - 'a'] == operands_sign[operand_pointer]) ? true : false;
 			operand_pointer++;
-		} else if ( input[index_pointer] >= 'A' && input[index_pointer] <= 'E' ) {
-			if ( previous_operation_element )
+		}
+		else if (input[index_pointer] >= 'A' && input[index_pointer] <= 'E')
+		{
+			if (previous_operation_element)
 				return -1;
 			previous_operation_element = 1;
 			numcpy(operands[operand_pointer], vars[input[index_pointer] - 'A']);
 			operands_SF[operand_pointer] = vars_SF[input[index_pointer] - 'A'];
-			operands_sign[operand_pointer] = ( vars_sign[input[index_pointer] - 'A'] == operands_sign[operand_pointer] ) ? true : false;
+			operands_sign[operand_pointer] = (vars_sign[input[index_pointer] - 'A'] == operands_sign[operand_pointer]) ? true : false;
 			operand_pointer++;
-		} else if ( input[index_pointer] >= '0' && input[index_pointer] <= '9' ) {
-			if ( previous_operation_element == 1 || previous_operation_element == 3 || buffer_SF > MAX_LENGTH ) // if previous op element is variable or number : ex) 100 1 or SF exceeds 30
+		}
+		else if (input[index_pointer] >= '0' && input[index_pointer] <= '9')
+		{
+			if (previous_operation_element == 1 || previous_operation_element == 3 || buffer_SF > MAX_LENGTH) // if previous op element is variable or number : ex) 100 1 or SF exceeds 30
 				return -1;
-			if ( previous_operation_element != 2 && input[index_pointer] == '0' ) { // same as above. ( professor's request. )
+			if (previous_operation_element != 2 && input[index_pointer] == '0')
+			{ // same as above. ( professor's request. )
 				previous_operation_element = 1;
 				numcpy(operands[operand_pointer], buffer);
 				operands[operand_pointer][0] = 0;
 				operands_SF[operand_pointer] = 1;
 				operand_pointer++;
-			} else {
+			}
+			else
+			{
 				previous_operation_element = 2;
 				buffer[buffer_SF] = input[index_pointer] - '0';
 				buffer_SF++;
 			}
-		} else {
-			switch ( input[index_pointer] ) {
+		}
+		else
+		{
+			switch (input[index_pointer])
+			{
 			case 'H':
 			case 'h':
-				if ( index_pointer != 99 && input[index_pointer+1] >= '1' && input[index_pointer+1] <= '3' ) { // SCE prevents core dump.
+				if (index_pointer != 99 && input[index_pointer + 1] >= '1' && input[index_pointer + 1] <= '3')
+				{ // SCE prevents core dump.
 					previous_operation_element = 1;
 					index_pointer++;
 					numcpy(operands[operand_pointer], historys[input[index_pointer] - '1']);
 					operands_SF[operand_pointer] = historys_SF[input[index_pointer] - '1'];
-					operands_sign[operand_pointer] = ( historys_sign[input[index_pointer] - '1'] == operands_sign[operand_pointer] ) ? true : false;
+					operands_sign[operand_pointer] = (historys_sign[input[index_pointer] - '1'] == operands_sign[operand_pointer]) ? true : false;
 					operand_pointer++;
-				} else
+				}
+				else
 					return -1;
 				break;
 			case '+':
 			case '-':
-				if (previous_operation_element == 2) {
+				if (previous_operation_element == 2)
+				{
 					// flush
 					numcpy(operands[operand_pointer], buffer);
 					operands_SF[operand_pointer] = buffer_SF;
 					// the sign cannot be distinguished by only number not including others.
-					
+
 					// buffer initialize
 					numcpy(buffer, init);
 					buffer_SF = 0;
-					
+
 					operand_pointer++;
-				} else if ( previous_operation_element == 0 ) {
-					if ( input[index_pointer] == '-' && valid_operator_before_unary ) {
+				}
+				else if (previous_operation_element == 0)
+				{
+					if (input[index_pointer] == '-' && valid_operator_before_unary)
+					{
 						operands_sign[operand_pointer] = false;
 						valid_operator_before_unary = false;
 						break;
@@ -188,7 +220,7 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 					else
 						return -1;
 				}
-				if ( index_pointer != 99 && input[index_pointer+1] == '-' ) // -- operator
+				if (index_pointer != 99 && input[index_pointer + 1] == '-') // -- operator
 					return -1;
 				previous_operation_element = 0;
 				operators[operator_pointer] = input[index_pointer];
@@ -199,7 +231,8 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 			case '*':
 			case '/':
 			case '%':
-				switch ( previous_operation_element ) {
+				switch (previous_operation_element)
+				{
 				case 0:
 					return -1;
 				case 2:
@@ -207,7 +240,7 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 					numcpy(operands[operand_pointer], buffer);
 					operands_SF[operand_pointer] = buffer_SF;
 					// the sign cannot be distinguished by only number not including others.
-					
+
 					// buffer initialize
 					numcpy(buffer, init);
 					buffer_SF = 0;
@@ -225,82 +258,92 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 			}
 		}
 	}
-	if ( previous_operation_element == 2 ) {
+	if (previous_operation_element == 2)
+	{
 		// flush
 		numcpy(operands[operand_pointer], buffer);
 		operands_SF[operand_pointer] = buffer_SF;
 		// the sign cannot be distinguished by only number not including others.
-		
-		operand_pointer++;
 
-	} else if ( previous_operation_element == 0 ) // expression cannot end with operator.
+		operand_pointer++;
+	}
+	else if (previous_operation_element == 0) // expression cannot end with operator.
 		return -1;
-	
-	for ( i = 0; i < 50; i++ ) // address initialize
+
+	for (i = 0; i < 50; i++) // address initialize
 		address[i] = i;
 
 	// calculate multiple, divide, get_remainder
-	
-	for ( operation_pointer = 0; operation_pointer < operator_pointer; operation_pointer++ ) {
-		switch(operators[operation_pointer]) {
+
+	for (operation_pointer = 0; operation_pointer < operator_pointer; operation_pointer++)
+	{
+		switch (operators[operation_pointer])
+		{
 		case '*':
 			address[operation_pointer] = operation_pointer + 1;
-			switch(multiple(operands[operation_pointer], operands_SF[operation_pointer], operands_sign[operation_pointer], operands[address[operation_pointer]], operands_SF[address[operation_pointer]], operands_sign[address[operation_pointer]], temp)) {
+			switch (multiple(operands[operation_pointer], operands_SF[operation_pointer], operands_sign[operation_pointer], operands[address[operation_pointer]], operands_SF[address[operation_pointer]], operands_sign[address[operation_pointer]], temp))
+			{
 			case -1:
 				return -1;
 			case 0:
-				operands_sign[operation_pointer+1] = false;
+				operands_sign[operation_pointer + 1] = false;
 				break;
 			case 1:
-				operands_sign[operation_pointer+1] = true;
+				operands_sign[operation_pointer + 1] = true;
 				break;
 			}
-			numcpy(operands[operation_pointer+1], temp);
-			operands_SF[operation_pointer+1] = get_SF(temp);
+			numcpy(operands[operation_pointer + 1], temp);
+			operands_SF[operation_pointer + 1] = get_SF(temp);
 			break;
 		case '/':
 			address[operation_pointer] = operation_pointer + 1;
-			switch(divide(operands[operation_pointer], operands_SF[operation_pointer], operands_sign[operation_pointer], operands[address[operation_pointer]], operands_SF[address[operation_pointer]], operands_sign[address[operation_pointer]], temp)) {
+			switch (divide(operands[operation_pointer], operands_SF[operation_pointer], operands_sign[operation_pointer], operands[address[operation_pointer]], operands_SF[address[operation_pointer]], operands_sign[address[operation_pointer]], temp))
+			{
 			case -1:
 				return -1;
 			case 0:
-				operands_sign[operation_pointer+1] = false;
+				operands_sign[operation_pointer + 1] = false;
 				break;
 			case 1:
-				operands_sign[operation_pointer+1] = true;
+				operands_sign[operation_pointer + 1] = true;
 				break;
 			}
-			numcpy(operands[operation_pointer+1], temp);
-			operands_SF[operation_pointer+1] = get_SF(temp);
+			numcpy(operands[operation_pointer + 1], temp);
+			operands_SF[operation_pointer + 1] = get_SF(temp);
 			break;
 		case '%':
 			address[operation_pointer] = operation_pointer + 1;
-			switch(get_remainder(operands[operation_pointer], operands_SF[operation_pointer], operands_sign[operation_pointer], operands[address[operation_pointer]], operands_SF[address[operation_pointer]], operands_sign[address[operation_pointer]], temp)) {
+			switch (get_remainder(operands[operation_pointer], operands_SF[operation_pointer], operands_sign[operation_pointer], operands[address[operation_pointer]], operands_SF[address[operation_pointer]], operands_sign[address[operation_pointer]], temp))
+			{
 			case -1:
 				return -1;
 			case 0:
-				operands_sign[operation_pointer+1] = false;
+				operands_sign[operation_pointer + 1] = false;
 				break;
 			case 1:
-				operands_sign[operation_pointer+1] = true;
+				operands_sign[operation_pointer + 1] = true;
 				break;
 			}
-			numcpy(operands[operation_pointer+1], temp);
-			operands_SF[operation_pointer+1] = get_SF(temp);
+			numcpy(operands[operation_pointer + 1], temp);
+			operands_SF[operation_pointer + 1] = get_SF(temp);
 			break;
 		}
 	}
 
 	// calculate plus, and minus. / if address[i] == i,
 
-	for ( operation_pointer = 0; operation_pointer < operator_pointer; operation_pointer++ ) {
-		if ( operators[operation_pointer] == '+' || operators[operation_pointer] == '-' ) {
-			for ( address_pointer = operation_pointer + 1; address_pointer < operator_pointer && address[address_pointer] != address_pointer; address_pointer++ ) // short circuit evaluate prevents core dump : out of index 
+	for (operation_pointer = 0; operation_pointer < operator_pointer; operation_pointer++)
+	{
+		if (operators[operation_pointer] == '+' || operators[operation_pointer] == '-')
+		{
+			for (address_pointer = operation_pointer + 1; address_pointer < operator_pointer && address[address_pointer] != address_pointer; address_pointer++) // short circuit evaluate prevents core dump : out of index
 				;
-			if ( operators[operation_pointer] == '-' ) {
+			if (operators[operation_pointer] == '-')
+			{
 				operands_sign[address_pointer] = operands_sign[address_pointer] ? false : true;
 			}
-			switch(sum(operands[operation_pointer], operands_SF[operation_pointer], operands_sign[operation_pointer], operands[address_pointer], operands_SF[address_pointer], operands_sign[address_pointer], temp)) {
+			switch (sum(operands[operation_pointer], operands_SF[operation_pointer], operands_sign[operation_pointer], operands[address_pointer], operands_SF[address_pointer], operands_sign[address_pointer], temp))
+			{
 			case -1:
 				return -1;
 			case 0:
@@ -315,54 +358,73 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 		}
 	}
 
-	numcpy(result, operands[operand_pointer-1]);
-	return operands_sign[operand_pointer-1];
+	numcpy(result, operands[operand_pointer - 1]);
+	return operands_sign[operand_pointer - 1];
 }
 
-void convert_bit_order(char array[], int SF) {
+void convert_bit_order(char array[], int SF)
+{
 	char temp;
 	int i, N;
 	N = SF / 2;
-	for ( i = 0; i < N; i++ ) {
+	for (i = 0; i < N; i++)
+	{
 		temp = array[i];
-		array[i] = array[SF-i-1];
-		array[SF-i-1] = temp;
+		array[i] = array[SF - i - 1];
+		array[SF - i - 1] = temp;
 	}
 }
 
-int sum (char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, bool var2_sign, char result[]) {
+int sum(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, bool var2_sign, char result[])
+{
 	int i;
 	bool result_sign;
 	int result_SF;
-		
-	for ( i = 0; i < MAX_LENGTH; i++ ) { // initialize result as 0
+
+	for (i = 0; i < MAX_LENGTH; i++)
+	{ // initialize result as 0
 		result[i] = 0;
 	}
-	for ( i = var1_SF; i < MAX_LENGTH; i++ ) {
+	for (i = var1_SF; i < MAX_LENGTH; i++)
+	{
 		var1[i] = 0;
 	}
-	for ( i = var2_SF; i < MAX_LENGTH; i++ ) {
+	for (i = var2_SF; i < MAX_LENGTH; i++)
+	{
 		var2[i] = 0;
 	}
 
-	if ( var1_sign == var2_sign ) { // plus same sign
+	if (var1_sign == var2_sign)
+	{							 // plus same sign
 		result_sign = var1_sign; // sign of the result follow both operands.
-	} else { // else
-		if ( var1_SF > var2_SF ) { // is var1 bigger than var2?
+	}
+	else
+	{ // else
+		if (var1_SF > var2_SF)
+		{ // is var1 bigger than var2?
 			result_sign = var1_sign;
-		} else if ( var1_SF < var2_SF ) { // is var2 bigger than var1?
+		}
+		else if (var1_SF < var2_SF)
+		{ // is var2 bigger than var1?
 			result_sign = var2_sign;
-		} else { // SF is same. so we have to compare more.
-			for ( i = 0; i < var1_SF; i++ ) {
-				if ( var1[i] > var2[i] ) { // is var1 bigger than var2?
+		}
+		else
+		{ // SF is same. so we have to compare more.
+			for (i = 0; i < var1_SF; i++)
+			{
+				if (var1[i] > var2[i])
+				{ // is var1 bigger than var2?
 					result_sign = var1_sign;
 					break;
-				} else if ( var1[i] < var2[i] ) { // is var2 bigger than var1?
+				}
+				else if (var1[i] < var2[i])
+				{ // is var2 bigger than var1?
 					result_sign = var2_sign;
 					break;
 				} // else : var1[i] == var[2] so repeat the block.
 			}
-			if ( i == -1 ) { // var1 + var2 == 0
+			if (i == -1)
+			{ // var1 + var2 == 0
 				return 1;
 			}
 		}
@@ -372,48 +434,59 @@ int sum (char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, boo
 	sign_processing(var1, var1_SF, var1_sign);
 	sign_processing(var2, var2_SF, var2_sign);
 
-	if ( result_sign ) {
-		for ( i = 0; i < 29; i++ ) { // i recycling
+	if (result_sign)
+	{
+		for (i = 0; i < 29; i++)
+		{ // i recycling
 			result[i] += var1[i] + var2[i];
-			result[i+1] += result[i]/10;
+			result[i + 1] += result[i] / 10;
 			result[i] %= 10;
-			if ( result[i] < 0 ) {
+			if (result[i] < 0)
+			{
 				result[i] += 10;
-				result[i+1]--;
+				result[i + 1]--;
 			}
 		}
 		result[29] += var1[29] + var2[29];
-		if ( result[29] > 9 )
-			return -1;
-	} else {
-		for ( i = 0; i < 29; i++ ) { // i recycling
-			result[i] += var1[i] + var2[i];
-			result[i+1] += result[i]/10;
-			result[i] %= 10;
-			if ( result[i] > 0 ) {
-				result[i] -= 10;
-				result[i+1]++;
-			}
-		}
-		result[29] += var1[29] + var2[29];
-		if ( result[29] > 9 )
+		if (result[29] > 9)
 			return -1;
 	}
-	
-	for ( i = var1_SF; i < MAX_LENGTH; i++ ) {
+	else
+	{
+		for (i = 0; i < 29; i++)
+		{ // i recycling
+			result[i] += var1[i] + var2[i];
+			result[i + 1] += result[i] / 10;
+			result[i] %= 10;
+			if (result[i] > 0)
+			{
+				result[i] -= 10;
+				result[i + 1]++;
+			}
+		}
+		result[29] += var1[29] + var2[29];
+		if (result[29] > 9)
+			return -1;
+	}
+
+	for (i = var1_SF; i < MAX_LENGTH; i++)
+	{
 		var1[i] = -48;
 	}
-	for ( i = var2_SF; i < MAX_LENGTH; i++ ) {
+	for (i = var2_SF; i < MAX_LENGTH; i++)
+	{
 		var2[i] = -48;
 	}
 
-	for ( i = 29; i > -1; i-- ) {
-		if ( result[i] != 0 )
+	for (i = 29; i > -1; i--)
+	{
+		if (result[i] != 0)
 			break;
 		else
 			result[i] = -48;
 	}
-	if ( i == -1 ) { // if result is 0
+	if (i == -1)
+	{ // if result is 0
 		i++;
 		result[i] = 0;
 	}
@@ -422,69 +495,84 @@ int sum (char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, boo
 	convert_bit_order(var1, var1_SF);
 	convert_bit_order(var2, var2_SF);
 	convert_bit_order(result, result_SF);
-	
+
 	sign_processing(var1, var1_SF, var1_sign);
 	sign_processing(var2, var2_SF, var2_sign);
 	sign_processing(result, result_SF, result_sign);
 
 	return result_sign;
 }
-int multiple (char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, bool var2_sign, char result[]) {
+int multiple(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, bool var2_sign, char result[])
+{
 	int i, j;
 	int result_prevent_overflow[MAX_LENGTH];
 	bool result_sign;
-	int result_SF;	
-	if ( var1_SF + var2_SF > 31 )
+	int result_SF;
+	if (var1_SF + var2_SF > 31)
 		return -1;
-	for ( i = 0; i < MAX_LENGTH; i++ ) { // initialize result as 0
+	for (i = 0; i < MAX_LENGTH; i++)
+	{ // initialize result as 0
 		result_prevent_overflow[i] = 0;
 	}
-	for ( i = var1_SF; i < MAX_LENGTH; i++ ) {
+	for (i = var1_SF; i < MAX_LENGTH; i++)
+	{
 		var1[i] = 0;
 	}
-	for ( i = var2_SF; i < MAX_LENGTH; i++ ) {
+	for (i = var2_SF; i < MAX_LENGTH; i++)
+	{
 		var2[i] = 0;
 	}
 
 	convert_bit_order(var1, var1_SF);
 	convert_bit_order(var2, var2_SF);
-	if ( var1_sign == var2_sign ) { // When things with the same sign are multiplied, the sign of the result is +.
-		result_sign = true; 
-	} else { // else
+	if (var1_sign == var2_sign)
+	{ // When things with the same sign are multiplied, the sign of the result is +.
+		result_sign = true;
+	}
+	else
+	{ // else
 		result_sign = false;
 	}
 
-	for ( i = 0; i < var1_SF; i++ ) {
-		for ( j = 0; j < var2_SF; j++ ) {
-			result_prevent_overflow[i+j] += var1[i]*var2[j];
+	for (i = 0; i < var1_SF; i++)
+	{
+		for (j = 0; j < var2_SF; j++)
+		{
+			result_prevent_overflow[i + j] += var1[i] * var2[j];
 		}
 	}
 	i = 0;
-	for ( i = 0; i < MAX_LENGTH; i++ ) {
-		result_prevent_overflow[i+1] += result_prevent_overflow[i]/10;
+	for (i = 0; i < MAX_LENGTH; i++)
+	{
+		result_prevent_overflow[i + 1] += result_prevent_overflow[i] / 10;
 		result_prevent_overflow[i] %= 10;
 	}
-	if ( result_prevent_overflow[29] > 9 )
+	if (result_prevent_overflow[29] > 9)
 		return -1;
-	for ( i = var1_SF; i < MAX_LENGTH; i++ ) {
+	for (i = var1_SF; i < MAX_LENGTH; i++)
+	{
 		var1[i] = -48;
 	}
-	for ( i = var2_SF; i < MAX_LENGTH; i++ ) {
+	for (i = var2_SF; i < MAX_LENGTH; i++)
+	{
 		var2[i] = -48;
 	}
 
-	for ( i = 29; i > -1; i-- ) {
-		if ( result_prevent_overflow[i] != 0 )
+	for (i = 29; i > -1; i--)
+	{
+		if (result_prevent_overflow[i] != 0)
 			break;
 		else
 			result_prevent_overflow[i] = -48;
 	}
-	if ( i == -1 ) {
+	if (i == -1)
+	{
 		i++;
 		result_prevent_overflow[i] = 0;
 	}
 	result_SF = i + 1;
-	for ( i = 0; i < MAX_LENGTH; i++ ) {
+	for (i = 0; i < MAX_LENGTH; i++)
+	{
 		result[i] = result_prevent_overflow[i];
 	}
 
@@ -494,167 +582,207 @@ int multiple (char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF
 	return result_sign;
 }
 
-void sign_processing(char var[], int SF, bool sign) {
+void sign_processing(char var[], int SF, bool sign)
+{
 	int i;
-	if ( ! sign ) {
-		for ( i = 0; i < SF; i++ ) {
+	if (!sign)
+	{
+		for (i = 0; i < SF; i++)
+		{
 			var[i] *= -1;
 		}
 	}
 	return;
 }
 
-int divide (char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, bool var2_sign, char result[]) {
+int divide(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, bool var2_sign, char result[])
+{
 	int i, j;
-	
+
 	char temp[30] = {2, 0};
 	int temp_SF = 1;
 	bool temp_sign = true;
 
 	bool result_sign;
-	
-	char MOD[9][30]; // multiples of divisor
+
+	char MOD[9][30];		// multiples of divisor
 	int MOD_next_digit = 0; // the index of MOD exceeding digit of the smallest divisor.
 	int place;
 	int goal = var1_SF - var2_SF + 1;
 	bool next_digit = false;
 	bool big; // Is MOD bigger than the part of dividend?
-	
+
 	char dividend[30];
 
 	result[0] = 0;
-	for ( i = 1; i < 30; i++ ) {
+	for (i = 1; i < 30; i++)
+	{
 		result[i] = -48;
 	}
 
 	numcpy(dividend, var1);
 
-	if ( var1_sign == var2_sign ) { // When things with the same sign are multiplied, the sign of the result is +.
-		result_sign = true; 
-	} else { // else
+	if (var1_sign == var2_sign)
+	{ // When things with the same sign are multiplied, the sign of the result is +.
+		result_sign = true;
+	}
+	else
+	{ // else
 		result_sign = false;
 	}
 
-	if ( var1_SF < var2_SF )
-		return 1; // It doesn't matter.
-	if ( var2_SF == 1 && var2[0] == 0 ) // Is it tried to divide by 0?
-		return -1; // error
-	
+	if (var1_SF < var2_SF)
+		return 1;					  // It doesn't matter.
+	if (var2_SF == 1 && var2[0] == 0) // Is it tried to divide by 0?
+		return -1;					  // error
+
 	// get divisors.
 
 	numcpy(MOD[0], var2);
 
-	for ( i = 1; i < 9; i++ ) {
-		if ( multiple(var2, var2_SF, var2_sign, temp, temp_SF, temp_sign, MOD[i]) == -1 ) {
+	for (i = 1; i < 9; i++)
+	{
+		if (multiple(var2, var2_SF, var2_sign, temp, temp_SF, temp_sign, MOD[i]) == -1)
+		{
 			MOD_next_digit = i;
 			break;
-		} else if ( get_SF(MOD[i]) != var2_SF && ( ! MOD_next_digit ) ) {
+		}
+		else if (get_SF(MOD[i]) != var2_SF && (!MOD_next_digit))
+		{
 			MOD_next_digit = i;
 		}
 		temp[0]++;
 	}
-	if ( ! MOD_next_digit )
+	if (!MOD_next_digit)
 		MOD_next_digit = 9;
-	for ( place = 0; place != goal; place++ ) {
+	for (place = 0; place != goal; place++)
+	{
 		big = false;
-		if ( next_digit ) {
-			for ( i = MOD_next_digit; i < 9; i++ ) {
-				for ( j = 0; j < var2_SF + 1; j++ ) {
-					if ( MOD[i][j] > dividend[place+j-1] ) {
+		if (next_digit)
+		{
+			for (i = MOD_next_digit; i < 9; i++)
+			{
+				for (j = 0; j < var2_SF + 1; j++)
+				{
+					if (MOD[i][j] > dividend[place + j - 1])
+					{
 						big = true;
 						break;
-					} else if ( MOD[i][j] < dividend[place+j-1] )
+					}
+					else if (MOD[i][j] < dividend[place + j - 1])
 						break;
 				}
-				if ( j == var2_SF && MOD[i][j] == dividend[place+j-1] ) { // short circuit evaluate prevents segmentation fault.
+				if (j == var2_SF && MOD[i][j] == dividend[place + j - 1])
+				{ // short circuit evaluate prevents segmentation fault.
 					big = false;
 					i++;
 					break;
-				} else if ( big ) {
+				}
+				else if (big)
+				{
 					break;
 				}
 			}
-			if ( i == MOD_next_digit ) { // if dividend is bigger than number of next digit or dividend is bigger than the biggest divisor?
+			if (i == MOD_next_digit)
+			{ // if dividend is bigger than number of next digit or dividend is bigger than the biggest divisor?
 				i--;
-				for ( j = var2_SF - 1; j > - 1; j-- ) {
-					dividend[place+j] -= MOD[i][j];
-					if ( dividend[place+j] < 0 ) {
-						dividend[place+j-1]--;
-						dividend[place+j] += 10;
-					}
-				}
-				result[place] = i + 1;
-			} else {
-				i--;
-				for ( j = var2_SF; j > - 1; j-- ) {
-					dividend[place+j-1] -= MOD[i][j];
-					if ( dividend[place+j-1] < 0 ) {
-						dividend[place+j-2]--;
-						dividend[place+j-1] += 10;
+				for (j = var2_SF - 1; j > -1; j--)
+				{
+					dividend[place + j] -= MOD[i][j];
+					if (dividend[place + j] < 0)
+					{
+						dividend[place + j - 1]--;
+						dividend[place + j] += 10;
 					}
 				}
 				result[place] = i + 1;
 			}
-			
-			if ( dividend[place] != 0 )
+			else
+			{
+				i--;
+				for (j = var2_SF; j > -1; j--)
+				{
+					dividend[place + j - 1] -= MOD[i][j];
+					if (dividend[place + j - 1] < 0)
+					{
+						dividend[place + j - 2]--;
+						dividend[place + j - 1] += 10;
+					}
+				}
+				result[place] = i + 1;
+			}
+
+			if (dividend[place] != 0)
 				next_digit = true;
 			else
 				next_digit = false;
-			
-		} else {
-			for ( i = 0; i < MOD_next_digit; i++ ) {
-				for ( j = 0; j < var2_SF; j++ ) {
-					if ( MOD[i][j] > dividend[place+j] ) {
+		}
+		else
+		{
+			for (i = 0; i < MOD_next_digit; i++)
+			{
+				for (j = 0; j < var2_SF; j++)
+				{
+					if (MOD[i][j] > dividend[place + j])
+					{
 						big = true;
 						break;
-					} else if ( MOD[i][j] < dividend[place+j] )
+					}
+					else if (MOD[i][j] < dividend[place + j])
 						break;
 				}
-				if ( j == var2_SF && MOD[i][j-1] == dividend[place+j-1] ) { // short circuit evaluate prevents segmentation fault.
+				if (j == var2_SF && MOD[i][j - 1] == dividend[place + j - 1])
+				{ // short circuit evaluate prevents segmentation fault.
 					i++;
 					break;
-				} else if ( big )
+				}
+				else if (big)
 					break;
 			}
-		
-			if ( i != 0 ) {
+
+			if (i != 0)
+			{
 				i--;
-				for ( j = var2_SF - 1; j > - 1; j-- ) {
-					dividend[place+j] -= MOD[i][j];
-					if ( dividend[place+j] < 0 ) {
-						dividend[place+j-1]--;
-						dividend[place+j] += 10;
+				for (j = var2_SF - 1; j > -1; j--)
+				{
+					dividend[place + j] -= MOD[i][j];
+					if (dividend[place + j] < 0)
+					{
+						dividend[place + j - 1]--;
+						dividend[place + j] += 10;
 					}
 				}
 				result[place] = i + 1;
-			} else
+			}
+			else
 				result[place] = 0;
-			
-			if ( dividend[place] != 0 )
+
+			if (dividend[place] != 0)
 				next_digit = true;
 			else
 				next_digit = false;
 		}
 	}
 
-	if ( result[0] == 0 && var1_SF != var2_SF ) {
-		for ( i = 0; i < 29; i++ )
-			result[i] = result[i+1];
+	if (result[0] == 0 && var1_SF != var2_SF)
+	{
+		for (i = 0; i < 29; i++)
+			result[i] = result[i + 1];
 	}
 	return result_sign;
-	
 }
 
-int get_remainder (char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, bool var2_sign, char result[]) {
+int get_remainder(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, bool var2_sign, char result[])
+{
 	int i, j;
-	
+
 	char temp[30] = {2, 0};
 	int temp_SF = 1;
 	bool temp_sign = true;
 
 	bool result_sign;
-	
-	char MOD[9][30]; // multiples of divisor
+
+	char MOD[9][30];		// multiples of divisor
 	int MOD_next_digit = 0; // the index of MOD exceeding digit of the smallest divisor.
 	int place;
 	int goal = var1_SF - var2_SF + 1;
@@ -665,119 +793,154 @@ int get_remainder (char var1[], int var1_SF, bool var1_sign, char var2[], int va
 
 	result_sign = var1_sign;
 
-	if ( var1_SF < var2_SF )
-		return result_sign; // It doesn't matter.
-	if ( var2_SF == 1 && var2[0] == 0 ) // Is it tried to divide by 0?
-		return -1; // error
-	
+	if (var1_SF < var2_SF)
+		return result_sign;			  // It doesn't matter.
+	if (var2_SF == 1 && var2[0] == 0) // Is it tried to divide by 0?
+		return -1;					  // error
+
 	// get divisors.
 
 	numcpy(MOD[0], var2);
 
-	for ( i = 1; i < 9; i++ ) {
-		if ( multiple(var2, var2_SF, var2_sign, temp, temp_SF, temp_sign, MOD[i]) == -1 ) {
+	for (i = 1; i < 9; i++)
+	{
+		if (multiple(var2, var2_SF, var2_sign, temp, temp_SF, temp_sign, MOD[i]) == -1)
+		{
 			MOD_next_digit = i;
 			break;
-		} else if ( get_SF(MOD[i]) != var2_SF && ( ! MOD_next_digit ) ) {
+		}
+		else if (get_SF(MOD[i]) != var2_SF && (!MOD_next_digit))
+		{
 			MOD_next_digit = i;
 		}
 		temp[0]++;
 	}
-	if ( ! MOD_next_digit )
+	if (!MOD_next_digit)
 		MOD_next_digit = 9;
-	for ( place = 0; place != goal; place++ ) {
+	for (place = 0; place != goal; place++)
+	{
 		big = false;
-		if ( next_digit ) {
-			for ( i = MOD_next_digit; i < 9; i++ ) {
-				for ( j = 0; j < var2_SF + 1; j++ ) {
-					if ( MOD[i][j] > result[place+j-1] ) {
+		if (next_digit)
+		{
+			for (i = MOD_next_digit; i < 9; i++)
+			{
+				for (j = 0; j < var2_SF + 1; j++)
+				{
+					if (MOD[i][j] > result[place + j - 1])
+					{
 						big = true;
 						break;
-					} else if ( MOD[i][j] < result[place+j-1] )
+					}
+					else if (MOD[i][j] < result[place + j - 1])
 						break;
 				}
-				if ( j == var2_SF && MOD[i][j] == result[place+j-1] ) { // short circuit evaluate prevents segmentation fault.
+				if (j == var2_SF && MOD[i][j] == result[place + j - 1])
+				{ // short circuit evaluate prevents segmentation fault.
 					big = false;
 					i++;
 					break;
-				} else if ( big ) {
+				}
+				else if (big)
+				{
 					break;
 				}
 			}
-			if ( i == MOD_next_digit ) { // if dividend is bigger than number of next digit or dividend is bigger than the biggest divisor?
+			if (i == MOD_next_digit)
+			{ // if dividend is bigger than number of next digit or dividend is bigger than the biggest divisor?
 				i--;
-				for ( j = var2_SF - 1; j > - 1; j-- ) {
-					result[place+j] -= MOD[i][j];
-					if ( result[place+j] < 0 ) {
-						result[place+j-1]--;
-						result[place+j] += 10;
-					}
-				}
-			} else {
-				i--;
-				for ( j = var2_SF; j > - 1; j-- ) {
-					result[place+j-1] -= MOD[i][j];
-					if ( result[place+j-1] < 0 ) {
-						result[place+j-2]--;
-						result[place+j-1] += 10;
+				for (j = var2_SF - 1; j > -1; j--)
+				{
+					result[place + j] -= MOD[i][j];
+					if (result[place + j] < 0)
+					{
+						result[place + j - 1]--;
+						result[place + j] += 10;
 					}
 				}
 			}
-			
-			if ( result[place] != 0 )
+			else
+			{
+				i--;
+				for (j = var2_SF; j > -1; j--)
+				{
+					result[place + j - 1] -= MOD[i][j];
+					if (result[place + j - 1] < 0)
+					{
+						result[place + j - 2]--;
+						result[place + j - 1] += 10;
+					}
+				}
+			}
+
+			if (result[place] != 0)
 				next_digit = true;
 			else
 				next_digit = false;
-			
-		} else {
-			for ( i = 0; i < MOD_next_digit; i++ ) {
-				for ( j = 0; j < var2_SF; j++ ) {
-					if ( MOD[i][j] > result[place+j] ) {
+		}
+		else
+		{
+			for (i = 0; i < MOD_next_digit; i++)
+			{
+				for (j = 0; j < var2_SF; j++)
+				{
+					if (MOD[i][j] > result[place + j])
+					{
 						big = true;
 						break;
-					} else if ( MOD[i][j] < result[place+j] )
+					}
+					else if (MOD[i][j] < result[place + j])
 						break;
 				}
-				if ( j == var2_SF - 1 && MOD[i][j] == result[place+j] ) { // short circuit evaluate prevents segmentation fault.
+				if (j == var2_SF - 1 && MOD[i][j] == result[place + j])
+				{ // short circuit evaluate prevents segmentation fault.
 					i++;
 					break;
-				} else if ( big )
+				}
+				else if (big)
 					break;
 			}
-			if ( i != 0 ) {
+			if (i != 0)
+			{
 				i--;
-				for ( j = var2_SF - 1; j > - 1; j-- ) {
-					result[place+j] -= MOD[i][j];
-					if ( result[place+j] < 0 ) {
-						result[place+j-1]--;
-						result[place+j] += 10;
+				for (j = var2_SF - 1; j > -1; j--)
+				{
+					result[place + j] -= MOD[i][j];
+					if (result[place + j] < 0)
+					{
+						result[place + j - 1]--;
+						result[place + j] += 10;
 					}
 				}
 			}
-			
-			if ( result[place] != 0 )
+
+			if (result[place] != 0)
 				next_digit = true;
 			else
 				next_digit = false;
 		}
 	}
-	
-	for ( i = 0; i < var1_SF; i++ ) {
-		if ( result[i] != 0 )
+
+	for (i = 0; i < var1_SF; i++)
+	{
+		if (result[i] != 0)
 			break;
 	}
-	if ( i != var1_SF ) {
-		for ( j = i; j < var1_SF; j++ ) {
-			result[j-i] = result[j];
+	if (i != var1_SF)
+	{
+		for (j = i; j < var1_SF; j++)
+		{
+			result[j - i] = result[j];
 		}
-		for ( j = var1_SF-i; j < var1_SF; j++ ) {
+		for (j = var1_SF - i; j < var1_SF; j++)
+		{
 			result[j] = -48;
 		}
-	} else { // if the result is 0
-		for ( i = 1; i < var1_SF; i++ )
+	}
+	else
+	{ // if the result is 0
+		for (i = 1; i < var1_SF; i++)
 			result[i] = -48;
 	}
 
 	return result_sign;
-
 }

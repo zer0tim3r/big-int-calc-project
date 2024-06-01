@@ -13,9 +13,10 @@ void logging(char log[100][108], int log_count, char put[100], bool type);
 void load_screen(char log[100][108], int log_count, char vars[5][MAX_LENGTH], int vars_SF[5], bool vars_sign[5]);
 
 // definition
-void logging(char log[100][108], int log_count, char put[100], bool type) { // type => true : input | false : output
+void logging(char log[100][108], int log_count, char put[100], bool type)
+{ // type => true : input | false : output
 	char temp[108];
-	if ( type )
+	if (type)
 		strcpy(temp, "(input) ");
 	else
 		strcpy(temp, "======> ");
@@ -23,7 +24,8 @@ void logging(char log[100][108], int log_count, char put[100], bool type) { // t
 	strcpy(log[log_count], temp);
 }
 
-void load_screen(char log[100][108], int log_count, char vars[5][MAX_LENGTH], int vars_SF[5], bool vars_sign[5]) {
+void load_screen(char log[100][108], int log_count, char vars[5][MAX_LENGTH], int vars_SF[5], bool vars_sign[5])
+{
 	int i, j;
 	system("clear");
 	printf("************************************************************************\n");
@@ -31,16 +33,18 @@ void load_screen(char log[100][108], int log_count, char vars[5][MAX_LENGTH], in
 	printf("************************************************************************\n");
 	printf("변 수\n");
 	printf("************************************************************************\n");
-	
-	for ( i = 0; i < 5; i++ ) {
+
+	for (i = 0; i < 5; i++)
+	{
 		printf("%c = ", 'a' + i);
 		print_num_withoutLog(vars[i], vars_SF[i], vars_sign[i]);
 	}
 	printf("************************************************************************\n");
 	printf("Help : H(istory) L(oad) R(efresh) (rese)T S(ave) Q(uit)\n");
 	printf("************************************************************************\n");
-	for ( i = 0; i < log_count; i++ ) {
-		for ( j = 0; j < 109 && log[i][j] != 0; j++ )
+	for (i = 0; i < log_count; i++)
+	{
+		for (j = 0; j < 109 && log[i][j] != 0; j++)
 			putchar(log[i][j]);
 		putchar('\n');
 	}
