@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 // load library
-void print_num_withoutLog(char[], int, bool);
+void print_num_withoutLog(char[], int, bool); // function.h
 
 // declaration
 void logging(char log[100][108], int log_count, char put[100], bool type);
