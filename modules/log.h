@@ -1,6 +1,4 @@
 #include "common.h"
-#include <string.h>
-#include <stdlib.h>
 
 // load library
 void print_num_withoutLog(char[], int, bool); // function.h
