@@ -140,36 +140,37 @@ int hexCharToDecimal(char c)
 
 int decimal2hex(char input[], char result[])
 {
-	input += 1;
-	int len = 0;
-	for (; input[len]; len++) 0; // strlen
-    int decimalDigits[100] = {0};  // 10진수 각 자리를 저장하는 배열
-    int decimalLen = 1;
+	input += 1; // remove #
+
+	int input_len = 0;
+	for (; input[input_len]; input_len++) 0; // strlen
+    int digits[100] = {0};  // 10진수 각 자리를 저장하는 배열
+    int digits_len = 1;
 
     // 각 16진수 문자를 처리
-    for (int i = 0; i < len; i++) {
+    for (int i = 0; i < input_len; i++) {
         int carry = hexCharToDecimal(input[i]);
 
         // 기존의 모든 10진수 자리에 대해 곱셈 및 더하기 연산
-        for (int j = 0; j < decimalLen; j++) {
-            int value = decimalDigits[j] * 16 + carry;
-            decimalDigits[j] = value % 10;
+        for (int j = 0; j < digits_len; j++) {
+            int value = digits[j] * 16 + carry;
+            digits[j] = value % 10;
             carry = value / 10;
         }
 
         // 캐리 처리
         while (carry > 0) {
-            decimalDigits[decimalLen] = carry % 10;
+            digits[digits_len] = carry % 10;
             carry /= 10;
-            decimalLen++;
+            digits_len++;
         }
     }
 
     // 10진수 숫자를 문자열로 변환
-    for (int i = 0; i < decimalLen; i++) {
-        result[decimalLen - i - 1] = decimalDigits[i] + '0';
+    for (int i = 0; i < digits_len; i++) {
+        result[digits_len - i - 1] = digits[i] + '0';
     }
-    result[decimalLen] = '\0';
+    result[digits_len] = '\0';
 
 	return 1;
 }
