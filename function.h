@@ -1,7 +1,5 @@
-#include <stdio.h>
-#include <stdbool.h>
 
-#define MAX_LENGTH 30
+#include "common.h"
 
 // libraries
 void logging(char[100][108], int, char[], bool);
@@ -13,6 +11,7 @@ void print_output(char[100][108], int, char[]);
 void print_num(char[100][108], int, char[], int, bool);
 void print_num_withoutLog(char[], int, bool);
 void print_error(char[100][108], int);
+int decimal2hex(char[], char[]);
 
 // definition
 void numcpy(char var1[], char var2[])
@@ -125,4 +124,21 @@ void print_error(char log[100][108], int log_count)
 {
 	char error[6] = "error";
 	print_output(log, log_count, error);
+}
+
+// definition
+int decimal2hex(char input[], char result[])
+{
+	static char number[31];
+	int i;
+	int operand_integer;
+	float operand_real;
+	bool type; // true : int | false : float
+
+	for (i = 0; i < 100 && input[i] == ' '; i++)
+		;
+	i++; // it must be the operator - '#'.
+	for (; i < 100 && input[i]; i++)
+
+		return 1;
 }

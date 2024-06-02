@@ -1,22 +1,8 @@
-#include <stdio.h>
-#include <stdbool.h>
-
-#define MAX_LENGTH 30
-
-// libraries
-int get_SF(char[]);
-int general_calculate(char[], char[5][MAX_LENGTH], int[], bool[], char[3][MAX_LENGTH], int[], bool[], char[]);
-void numcpy(char[], char[]);
-void load_screen(char[100][108], int, char[5][MAX_LENGTH], int[], bool[]);
-void logging(char[100][108], int, char[], bool); // bool => true : input | false : output
-void print_num(char[100][108], int, char[], int, bool);
-void print_output(char[100][108], int, char[]);
-void print_error(char[100][108], int);
-void write_history(char[3][MAX_LENGTH], int[], bool[], char[], int, bool);
-void print_histories(char[100][108], int, char[3][MAX_LENGTH], int[], bool[]);
-void write_file(char[5][MAX_LENGTH], int[], bool[], char[3][MAX_LENGTH], int[], bool[]);
-void read_file(char[5][MAX_LENGTH], int[], bool[], char[3][MAX_LENGTH], int[], bool[]);
-int decimal2hex(char[], char[]);
+#include "function.h"
+#include "file.h"
+#include "calculate.h"
+#include "history.h"
+#include "log.h"
 
 int main()
 {
@@ -247,5 +233,6 @@ int main()
 			}
 		}
 	}
+
 	return 0; // unreachable code
 }

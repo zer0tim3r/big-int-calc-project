@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdbool.h>
-
-#define MAX_LENGTH 30
+#include "common.h"
 
 // declaration
 void write_file(char[5][MAX_LENGTH], int[], bool[], char[3][MAX_LENGTH], int[], bool[]);

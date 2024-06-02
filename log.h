@@ -1,9 +1,6 @@
-#include <stdio.h>
-#include <stdbool.h>
+#include "common.h"
 #include <string.h>
 #include <stdlib.h>
-
-#define MAX_LENGTH 30
 
 // load library
 void print_num_withoutLog(char[], int, bool);

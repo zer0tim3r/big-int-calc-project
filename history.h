@@ -1,5 +1,4 @@
-#include <stdbool.h>
-#define MAX_LENGTH 30
+#include "common.h"
 
 // libraries
 void print_output(char[100][108], int, char[]);

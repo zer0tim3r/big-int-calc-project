@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdbool.h>
-
-#define MAX_LENGTH 30
+#include "common.h"
 
 // libraries
 int get_SF(char[]);
