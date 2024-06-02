@@ -170,7 +170,8 @@ int decimal2hex(char input[], char result[])
     for (int i = 0; i < digits_len; i++) {
         result[digits_len - i - 1] = digits[i] + '0';
     }
-    result[digits_len] = '\0';
+
+    result[digits_len] = 0; // END OF STR
 
 	return 1;
 }
