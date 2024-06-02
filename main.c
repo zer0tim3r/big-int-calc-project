@@ -1,8 +1,8 @@
-#include "function.h"
-#include "file.h"
-#include "calculate.h"
-#include "history.h"
-#include "log.h"
+#include "modules/function.h"
+#include "modules/file.h"
+#include "modules/calculate.h"
+#include "modules/history.h"
+#include "modules/log.h"
 
 int main()
 {

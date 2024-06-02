@@ -9,6 +9,7 @@ void write_file(char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char 
 {
 	int i, j;
 	FILE *out = fopen("cal.txt", "w");
+
 	for (i = 0; i < 5; i++)
 	{
 		putc(vars_sign[i] ? '+' : '-', out);
@@ -16,6 +17,7 @@ void write_file(char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char 
 			putc(vars[i][j] + '0', out);
 		putc('\n', out);
 	}
+
 	for (i = 0; i < 3; i++)
 	{
 		putc(histories_sign[i] ? '+' : '-', out);
@@ -23,6 +25,7 @@ void write_file(char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char 
 			putc(histories[i][j] + '0', out);
 		putc('\n', out);
 	}
+
 	fclose(out);
 }
 
@@ -31,6 +34,7 @@ void read_file(char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char h
 	int i, j;
 	char c;
 	FILE *in = fopen("cal.txt", "r");
+
 	for (i = 0; i < 5; i++)
 	{
 		vars_sign[i] = (getc(in) == '+') ? true : false;
@@ -38,6 +42,7 @@ void read_file(char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char h
 			vars[i][j] = c - '0';
 		vars_SF[i] = j;
 	}
+
 	for (i = 0; i < 3; i++)
 	{
 		histories_sign[i] = (getc(in) == '+') ? true : false;
@@ -45,5 +50,6 @@ void read_file(char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char h
 			histories[i][j] = c - '0';
 		histories_SF[i] = j;
 	}
+
 	fclose(in);
 }
