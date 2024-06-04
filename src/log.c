@@ -1,15 +1,19 @@
-#include "common.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX_LENGTH 30
 
 // load library
-void print_num_withoutLog(char[], int, bool); // function.h
+void print_num_withoutLog(char[], int, _Bool); // function.h
 
 // declaration
-void logging(char log[100][108], int log_count, char put[100], bool type);
-void load_screen(char log[100][108], int log_count, char vars[5][MAX_LENGTH], int vars_SF[5], bool vars_sign[5]);
+void logging(char log[100][108], int log_count, char put[100], _Bool type);
+void load_screen(char log[100][108], int log_count, char vars[5][MAX_LENGTH], int vars_SF[5], _Bool vars_sign[5]);
 
 // definition
-void logging(char log[100][108], int log_count, char put[100], bool type)
-{ // type => true : input | false : output
+void logging(char log[100][108], int log_count, char put[100], _Bool type)
+{ // type => TRUE : input | FALSE : output
 	char temp[108];
 	if (type)
 		strcpy(temp, "(input) ");
@@ -19,7 +23,7 @@ void logging(char log[100][108], int log_count, char put[100], bool type)
 	strcpy(log[log_count], temp);
 }
 
-void load_screen(char log[100][108], int log_count, char vars[5][MAX_LENGTH], int vars_SF[5], bool vars_sign[5])
+void load_screen(char log[100][108], int log_count, char vars[5][MAX_LENGTH], int vars_SF[5], _Bool vars_sign[5])
 {
 	int i, j;
 	system("clear");

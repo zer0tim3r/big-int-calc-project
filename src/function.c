@@ -1,15 +1,19 @@
+#include <stdio.h>
+#include <stdlib.h>
 
-#include "common.h"
+#define TRUE 1
+#define FALSE 0
+#define MAX_LENGTH 30
 
-// libraries
-void logging(char[100][108], int, char[], bool);
+// log.c
+void logging(char[100][108], int, char[], _Bool);
 
 // declaration
 void numcpy(char[], char[]);
 int get_SF(char[]);
 void print_output(char[100][108], int, char[]);
-void print_num(char[100][108], int, char[], int, bool);
-void print_num_withoutLog(char[], int, bool);
+void print_num(char[100][108], int, char[], int, _Bool);
+void print_num_withoutLog(char[], int, _Bool);
 void print_error(char[100][108], int);
 int decimal2hex(char[], char[]);
 
@@ -42,10 +46,10 @@ void print_output(char log[100][108], int log_count, char output[])
 		putchar(output[i]);
 	}
 	putchar('\n');
-	logging(log, log_count, output, false);
+	logging(log, log_count, output, FALSE);
 }
 
-void print_num(char log[100][108], int log_count, char var[], int SF, bool sign)
+void print_num(char log[100][108], int log_count, char var[], int SF, _Bool sign)
 {
 	int i, j, index;
 	int I = SF % 3, J = SF / 3 - 1;
@@ -88,7 +92,7 @@ void print_num(char log[100][108], int log_count, char var[], int SF, bool sign)
 	print_output(log, log_count, temp);
 }
 
-void print_num_withoutLog(char var[], int SF, bool sign)
+void print_num_withoutLog(char var[], int SF, _Bool sign)
 {
 	int i, j, index;
 	int I = SF % 3, J = SF / 3 - 1;

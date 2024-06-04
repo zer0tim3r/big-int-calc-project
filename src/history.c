@@ -1,15 +1,18 @@
-#include "common.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-// libraries
+#define MAX_LENGTH 30
+
+// function.c
 void print_output(char[100][108], int, char[]);
 void numcpy(char[], char[]);
 
 // declaration
-void print_histories(char[100][108], int, char[3][MAX_LENGTH], int[], bool[]);
-void write_history(char[3][MAX_LENGTH], int[], bool[], char[], int, bool);
+void print_histories(char[100][108], int, char[3][MAX_LENGTH], int[], _Bool[]);
+void write_history(char[3][MAX_LENGTH], int[], _Bool[], char[], int, _Bool);
 
 // definition
-void print_histories(char log[100][108], int log_count, char histories[3][MAX_LENGTH], int histories_SF[], bool histories_sign[])
+void print_histories(char log[100][108], int log_count, char histories[3][MAX_LENGTH], int histories_SF[], _Bool histories_sign[])
 {
 	int h, i, j, index;
 	int I, J;
@@ -61,7 +64,7 @@ void print_histories(char log[100][108], int log_count, char histories[3][MAX_LE
 	}
 }
 
-void write_history(char histories[3][MAX_LENGTH], int histories_SF[], bool histories_sign[], char result[], int result_SF, bool result_sign)
+void write_history(char histories[3][MAX_LENGTH], int histories_SF[], _Bool histories_sign[], char result[], int result_SF, _Bool result_sign)
 {
 	numcpy(histories[2], histories[1]);
 	numcpy(histories[1], histories[0]);

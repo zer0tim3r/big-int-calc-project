@@ -1,11 +1,16 @@
-#include "common.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#define TRUE 1
+#define FALSE 0
+#define MAX_LENGTH 30
 
 // declaration
-void write_file(char[5][MAX_LENGTH], int[], bool[], char[3][MAX_LENGTH], int[], bool[]);
-void read_file(char[5][MAX_LENGTH], int[], bool[], char[3][MAX_LENGTH], int[], bool[]);
+void write_file(char[5][MAX_LENGTH], int[], _Bool[], char[3][MAX_LENGTH], int[], _Bool[]);
+void read_file(char[5][MAX_LENGTH], int[], _Bool[], char[3][MAX_LENGTH], int[], _Bool[]);
 
 // definition
-void write_file(char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char histories[3][MAX_LENGTH], int histories_SF[], bool histories_sign[])
+void write_file(char vars[5][MAX_LENGTH], int vars_SF[], _Bool vars_sign[], char histories[3][MAX_LENGTH], int histories_SF[], _Bool histories_sign[])
 {
 	int i, j;
 	FILE *out = fopen("cal.txt", "w");
@@ -29,7 +34,7 @@ void write_file(char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char 
 	fclose(out);
 }
 
-void read_file(char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char histories[3][MAX_LENGTH], int histories_SF[], bool histories_sign[])
+void read_file(char vars[5][MAX_LENGTH], int vars_SF[], _Bool vars_sign[], char histories[3][MAX_LENGTH], int histories_SF[], _Bool histories_sign[])
 {
 	int i, j;
 	char c;
@@ -37,7 +42,7 @@ void read_file(char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char h
 
 	for (i = 0; i < 5; i++)
 	{
-		vars_sign[i] = (getc(in) == '+') ? true : false;
+		vars_sign[i] = (getc(in) == '+') ? TRUE : FALSE;
 		for (j = 0; (c = getc(in)) != '\n' && j < 30; j++)
 			vars[i][j] = c - '0';
 		vars_SF[i] = j;
@@ -45,7 +50,7 @@ void read_file(char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char h
 
 	for (i = 0; i < 3; i++)
 	{
-		histories_sign[i] = (getc(in) == '+') ? true : false;
+		histories_sign[i] = (getc(in) == '+') ? TRUE : FALSE;
 		for (j = 0; (c = getc(in)) != '\n' && j < 30; j++)
 			histories[i][j] = c - '0';
 		histories_SF[i] = j;

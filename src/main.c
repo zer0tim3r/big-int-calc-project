@@ -1,8 +1,45 @@
-#include "modules/function.h"
-#include "modules/file.h"
-#include "modules/calculate.h"
-#include "modules/history.h"
-#include "modules/log.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TRUE 1
+#define FALSE 0
+#define MAX_LENGTH 30
+
+// calculate.c
+int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], _Bool vars_sign[], char historys[3][MAX_LENGTH], int historys_SF[], _Bool historys_sign[], char result[]);
+int sum(char[], int, _Bool, char[], int, _Bool, char[]);
+int multiple(char[], int, _Bool, char[], int, _Bool, char[]);
+int divide(char[], int, _Bool, char[], int, _Bool, char[]);
+int get_remainder(char[], int, _Bool, char[], int, _Bool, char[]);
+void sign_processing(char[], int, _Bool); // value of array changes by sign.
+void convert_bit_order(char array[], int SF);
+
+// file.c
+void write_file(char[5][MAX_LENGTH], int[], _Bool[], char[3][MAX_LENGTH], int[], _Bool[]);
+void read_file(char[5][MAX_LENGTH], int[], _Bool[], char[3][MAX_LENGTH], int[], _Bool[]);
+
+// function.c
+void numcpy(char[], char[]);
+int get_SF(char[]);
+void print_output(char[100][108], int, char[]);
+void print_num(char[100][108], int, char[], int, _Bool);
+void print_num_withoutLog(char[], int, _Bool);
+void print_error(char[100][108], int);
+int decimal2hex(char[], char[]);
+
+// history.c
+void print_histories(char[100][108], int, char[3][MAX_LENGTH], int[], _Bool[]);
+void write_history(char[3][MAX_LENGTH], int[], _Bool[], char[], int, _Bool);
+
+// log.c
+void logging(char log[100][108], int log_count, char put[100], _Bool type);
+void load_screen(char log[100][108], int log_count, char vars[5][MAX_LENGTH], int vars_SF[5], _Bool vars_sign[5]);
+
+
+void get_input(char* serialized) {
+	
+}
 
 int main()
 {
@@ -21,9 +58,9 @@ int main()
 	int histories_SF[3];
 	int result_SF;
 
-	bool vars_sign[5];
-	bool histories_sign[3];
-	bool result_sign;
+	_Bool vars_sign[5];
+	_Bool histories_sign[3];
+	_Bool result_sign;
 
 	int i, j;
 	char c;
@@ -35,7 +72,7 @@ int main()
 			vars[i][j] = -48;
 		vars[i][0] = 0;
 		vars_SF[i] = 1;
-		vars_sign[i] = true;
+		vars_sign[i] = TRUE;
 	}
 	for (i = 0; i < 3; i++)
 	{
@@ -43,10 +80,11 @@ int main()
 			histories[i][j] = -48;
 		histories[i][0] = 0;
 		histories_SF[i] = 1;
-		histories_sign[i] = true;
+		histories_sign[i] = TRUE;
 	}
 
 	load_screen(log, log_count, vars, vars_SF, vars_sign);
+
 	while (1)
 	{
 		command = -1;
@@ -55,7 +93,7 @@ int main()
 			input[i] = 0;
 		for (i = 0; (c = getchar()) != '\n' && i < 100; i++)
 			input[i] = c;
-		logging(log, log_count, input, true);
+		logging(log, log_count, input, TRUE);
 		log_count++;
 		if (i == 100 && c != '\n')
 		{
@@ -121,7 +159,7 @@ int main()
 							vars[i][j] = -48;
 						vars[i][0] = 0;
 						vars_SF[i] = 1;
-						vars_sign[i] = true;
+						vars_sign[i] = TRUE;
 					}
 					// write_history(a) can be worked.
 					for (i = 0; i < 3; i++)
@@ -130,7 +168,7 @@ int main()
 							histories[i][j] = -48;
 						histories[i][0] = 0;
 						histories_SF[i] = 1;
-						histories_sign[i] = true;
+						histories_sign[i] = TRUE;
 					}
 					log_count = 0;
 					load_screen(log, log_count, vars, vars_SF, vars_sign);
@@ -195,7 +233,7 @@ int main()
 					log_count++;
 					break;
 				case 0:
-					result_sign = false;
+					result_sign = FALSE;
 					result_SF = get_SF(result);
 
 					if (var_temp != -1)
@@ -212,7 +250,7 @@ int main()
 					write_history(histories, histories_SF, histories_sign, result, result_SF, result_sign);
 					break;
 				case 1:
-					result_sign = true;
+					result_sign = TRUE;
 					result_SF = get_SF(result);
 
 					if (var_temp != -1)

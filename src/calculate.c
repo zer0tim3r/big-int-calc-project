@@ -1,20 +1,24 @@
-#include "common.h"
+#include <stdlib.h>
 
-// libraries
+#define TRUE 1
+#define FALSE 0
+#define MAX_LENGTH 30
+
+// function.c
 int get_SF(char[]);
 void numcpy(char[], char[]);
 
 // declaration
-int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char historys[3][MAX_LENGTH], int historys_SF[], bool historys_sign[], char result[]);
-int sum(char[], int, bool, char[], int, bool, char[]);
-int multiple(char[], int, bool, char[], int, bool, char[]);
-int divide(char[], int, bool, char[], int, bool, char[]);
-int get_remainder(char[], int, bool, char[], int, bool, char[]);
-void sign_processing(char[], int, bool); // value of array changes by sign.
+int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], _Bool vars_sign[], char historys[3][MAX_LENGTH], int historys_SF[], _Bool historys_sign[], char result[]);
+int sum(char[], int, _Bool, char[], int, _Bool, char[]);
+int multiple(char[], int, _Bool, char[], int, _Bool, char[]);
+int divide(char[], int, _Bool, char[], int, _Bool, char[]);
+int get_remainder(char[], int, _Bool, char[], int, _Bool, char[]);
+void sign_processing(char[], int, _Bool); // value of array changes by sign.
 void convert_bit_order(char array[], int SF);
 
 // definition
-int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], bool vars_sign[], char historys[3][MAX_LENGTH], int historys_SF[], bool historys_sign[], char result[])
+int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], _Bool vars_sign[], char historys[3][MAX_LENGTH], int historys_SF[], _Bool historys_sign[], char result[])
 {
 	int i;
 
@@ -36,8 +40,8 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 	char operators[50];
 	char operands[50][MAX_LENGTH];
 	int operands_SF[50];
-	bool operands_sign[50];
-	bool valid_operator_before_unary = true;
+	_Bool operands_sign[50];
+	_Bool valid_operator_before_unary = TRUE;
 	int address[50]; // it initialize with same index. after calculate, address of following operand saved in index of precedented operand. for example, after calculate a[3] * 5[4], address[3] = 4;
 
 	char temp[MAX_LENGTH];
@@ -45,7 +49,7 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 	static char int_MAX[MAX_LENGTH] = {2, 1, 4, 7, 4, 8, 3, 6, 4, -1, -48}; // it will be used when processed # operator.
 
 	for (i = 0; i < 50; i++)
-		operands_sign[i] = true;																 // prepare for unary.
+		operands_sign[i] = TRUE;																 // prepare for unary.
 	for (index_pointer = 0; index_pointer < 100 && input[index_pointer] == ' '; index_pointer++) // short circuit evaluate prevents core dump : out of index
 		;
 	if (input[index_pointer] >= 'a' && input[index_pointer] <= 'e')
@@ -98,8 +102,8 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 		// case '+':
 		case '-': // it must be unary operator. unary operator does not enter this below array. just calculate this time.
 			previous_operation_element = 0;
-			operands_sign[0] = false;
-			valid_operator_before_unary = false;
+			operands_sign[0] = FALSE;
+			valid_operator_before_unary = FALSE;
 			break;
 		default:
 			return -1;
@@ -141,7 +145,7 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 			previous_operation_element = 1;
 			numcpy(operands[operand_pointer], vars[input[index_pointer] - 'a']);
 			operands_SF[operand_pointer] = vars_SF[input[index_pointer] - 'a'];
-			operands_sign[operand_pointer] = (vars_sign[input[index_pointer] - 'a'] == operands_sign[operand_pointer]) ? true : false;
+			operands_sign[operand_pointer] = (vars_sign[input[index_pointer] - 'a'] == operands_sign[operand_pointer]) ? TRUE : FALSE;
 			operand_pointer++;
 		}
 		else if (input[index_pointer] >= 'A' && input[index_pointer] <= 'E')
@@ -151,7 +155,7 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 			previous_operation_element = 1;
 			numcpy(operands[operand_pointer], vars[input[index_pointer] - 'A']);
 			operands_SF[operand_pointer] = vars_SF[input[index_pointer] - 'A'];
-			operands_sign[operand_pointer] = (vars_sign[input[index_pointer] - 'A'] == operands_sign[operand_pointer]) ? true : false;
+			operands_sign[operand_pointer] = (vars_sign[input[index_pointer] - 'A'] == operands_sign[operand_pointer]) ? TRUE : FALSE;
 			operand_pointer++;
 		}
 		else if (input[index_pointer] >= '0' && input[index_pointer] <= '9')
@@ -185,7 +189,7 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 					index_pointer++;
 					numcpy(operands[operand_pointer], historys[input[index_pointer] - '1']);
 					operands_SF[operand_pointer] = historys_SF[input[index_pointer] - '1'];
-					operands_sign[operand_pointer] = (historys_sign[input[index_pointer] - '1'] == operands_sign[operand_pointer]) ? true : false;
+					operands_sign[operand_pointer] = (historys_sign[input[index_pointer] - '1'] == operands_sign[operand_pointer]) ? TRUE : FALSE;
 					operand_pointer++;
 				}
 				else
@@ -210,8 +214,8 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 				{
 					if (input[index_pointer] == '-' && valid_operator_before_unary)
 					{
-						operands_sign[operand_pointer] = false;
-						valid_operator_before_unary = false;
+						operands_sign[operand_pointer] = FALSE;
+						valid_operator_before_unary = FALSE;
 						break;
 					}
 					else
@@ -223,7 +227,7 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 				operators[operator_pointer] = input[index_pointer];
 
 				operator_pointer++;
-				valid_operator_before_unary = true;
+				valid_operator_before_unary = TRUE;
 				break;
 			case '*':
 			case '/':
@@ -247,7 +251,7 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 					previous_operation_element = 0;
 					operators[operator_pointer] = input[index_pointer];
 					operator_pointer++;
-					valid_operator_before_unary = true;
+					valid_operator_before_unary = TRUE;
 				}
 				break;
 			default:
@@ -283,10 +287,10 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 			case -1:
 				return -1;
 			case 0:
-				operands_sign[operation_pointer + 1] = false;
+				operands_sign[operation_pointer + 1] = FALSE;
 				break;
 			case 1:
-				operands_sign[operation_pointer + 1] = true;
+				operands_sign[operation_pointer + 1] = TRUE;
 				break;
 			}
 			numcpy(operands[operation_pointer + 1], temp);
@@ -299,10 +303,10 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 			case -1:
 				return -1;
 			case 0:
-				operands_sign[operation_pointer + 1] = false;
+				operands_sign[operation_pointer + 1] = FALSE;
 				break;
 			case 1:
-				operands_sign[operation_pointer + 1] = true;
+				operands_sign[operation_pointer + 1] = TRUE;
 				break;
 			}
 			numcpy(operands[operation_pointer + 1], temp);
@@ -315,10 +319,10 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 			case -1:
 				return -1;
 			case 0:
-				operands_sign[operation_pointer + 1] = false;
+				operands_sign[operation_pointer + 1] = FALSE;
 				break;
 			case 1:
-				operands_sign[operation_pointer + 1] = true;
+				operands_sign[operation_pointer + 1] = TRUE;
 				break;
 			}
 			numcpy(operands[operation_pointer + 1], temp);
@@ -337,17 +341,17 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], boo
 				;
 			if (operators[operation_pointer] == '-')
 			{
-				operands_sign[address_pointer] = operands_sign[address_pointer] ? false : true;
+				operands_sign[address_pointer] = operands_sign[address_pointer] ? FALSE : TRUE;
 			}
 			switch (sum(operands[operation_pointer], operands_SF[operation_pointer], operands_sign[operation_pointer], operands[address_pointer], operands_SF[address_pointer], operands_sign[address_pointer], temp))
 			{
 			case -1:
 				return -1;
 			case 0:
-				operands_sign[address_pointer] = false;
+				operands_sign[address_pointer] = FALSE;
 				break;
 			case 1:
-				operands_sign[address_pointer] = true;
+				operands_sign[address_pointer] = TRUE;
 				break;
 			}
 			numcpy(operands[address_pointer], temp);
@@ -372,10 +376,10 @@ void convert_bit_order(char array[], int SF)
 	}
 }
 
-int sum(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, bool var2_sign, char result[])
+int sum(char var1[], int var1_SF, _Bool var1_sign, char var2[], int var2_SF, _Bool var2_sign, char result[])
 {
 	int i;
-	bool result_sign;
+	_Bool result_sign;
 	int result_SF;
 
 	for (i = 0; i < MAX_LENGTH; i++)
@@ -499,11 +503,11 @@ int sum(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, bool
 
 	return result_sign;
 }
-int multiple(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, bool var2_sign, char result[])
+int multiple(char var1[], int var1_SF, _Bool var1_sign, char var2[], int var2_SF, _Bool var2_sign, char result[])
 {
 	int i, j;
 	int result_prevent_overflow[MAX_LENGTH];
-	bool result_sign;
+	_Bool result_sign;
 	int result_SF;
 	if (var1_SF + var2_SF > 31)
 		return -1;
@@ -524,11 +528,11 @@ int multiple(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF,
 	convert_bit_order(var2, var2_SF);
 	if (var1_sign == var2_sign)
 	{ // When things with the same sign are multiplied, the sign of the result is +.
-		result_sign = true;
+		result_sign = TRUE;
 	}
 	else
 	{ // else
-		result_sign = false;
+		result_sign = FALSE;
 	}
 
 	for (i = 0; i < var1_SF; i++)
@@ -579,7 +583,7 @@ int multiple(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF,
 	return result_sign;
 }
 
-void sign_processing(char var[], int SF, bool sign)
+void sign_processing(char var[], int SF, _Bool sign)
 {
 	int i;
 	if (!sign)
@@ -592,22 +596,22 @@ void sign_processing(char var[], int SF, bool sign)
 	return;
 }
 
-int divide(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, bool var2_sign, char result[])
+int divide(char var1[], int var1_SF, _Bool var1_sign, char var2[], int var2_SF, _Bool var2_sign, char result[])
 {
 	int i, j;
 
 	char temp[30] = {2, 0};
 	int temp_SF = 1;
-	bool temp_sign = true;
+	_Bool temp_sign = TRUE;
 
-	bool result_sign;
+	_Bool result_sign;
 
 	char MOD[9][30];		// multiples of divisor
 	int MOD_next_digit = 0; // the index of MOD exceeding digit of the smallest divisor.
 	int place;
 	int goal = var1_SF - var2_SF + 1;
-	bool next_digit = false;
-	bool big; // Is MOD bigger than the part of dividend?
+	_Bool next_digit = FALSE;
+	_Bool big; // Is MOD bigger than the part of dividend?
 
 	char dividend[30];
 
@@ -621,11 +625,11 @@ int divide(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, b
 
 	if (var1_sign == var2_sign)
 	{ // When things with the same sign are multiplied, the sign of the result is +.
-		result_sign = true;
+		result_sign = TRUE;
 	}
 	else
 	{ // else
-		result_sign = false;
+		result_sign = FALSE;
 	}
 
 	if (var1_SF < var2_SF)
@@ -654,7 +658,7 @@ int divide(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, b
 		MOD_next_digit = 9;
 	for (place = 0; place != goal; place++)
 	{
-		big = false;
+		big = FALSE;
 		if (next_digit)
 		{
 			for (i = MOD_next_digit; i < 9; i++)
@@ -663,7 +667,7 @@ int divide(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, b
 				{
 					if (MOD[i][j] > dividend[place + j - 1])
 					{
-						big = true;
+						big = TRUE;
 						break;
 					}
 					else if (MOD[i][j] < dividend[place + j - 1])
@@ -671,7 +675,7 @@ int divide(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, b
 				}
 				if (j == var2_SF && MOD[i][j] == dividend[place + j - 1])
 				{ // short circuit evaluate prevents segmentation fault.
-					big = false;
+					big = FALSE;
 					i++;
 					break;
 				}
@@ -710,9 +714,9 @@ int divide(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, b
 			}
 
 			if (dividend[place] != 0)
-				next_digit = true;
+				next_digit = TRUE;
 			else
-				next_digit = false;
+				next_digit = FALSE;
 		}
 		else
 		{
@@ -722,7 +726,7 @@ int divide(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, b
 				{
 					if (MOD[i][j] > dividend[place + j])
 					{
-						big = true;
+						big = TRUE;
 						break;
 					}
 					else if (MOD[i][j] < dividend[place + j])
@@ -755,9 +759,9 @@ int divide(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, b
 				result[place] = 0;
 
 			if (dividend[place] != 0)
-				next_digit = true;
+				next_digit = TRUE;
 			else
-				next_digit = false;
+				next_digit = FALSE;
 		}
 	}
 
@@ -769,22 +773,22 @@ int divide(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, b
 	return result_sign;
 }
 
-int get_remainder(char var1[], int var1_SF, bool var1_sign, char var2[], int var2_SF, bool var2_sign, char result[])
+int get_remainder(char var1[], int var1_SF, _Bool var1_sign, char var2[], int var2_SF, _Bool var2_sign, char result[])
 {
 	int i, j;
 
 	char temp[30] = {2, 0};
 	int temp_SF = 1;
-	bool temp_sign = true;
+	_Bool temp_sign = TRUE;
 
-	bool result_sign;
+	_Bool result_sign;
 
 	char MOD[9][30];		// multiples of divisor
 	int MOD_next_digit = 0; // the index of MOD exceeding digit of the smallest divisor.
 	int place;
 	int goal = var1_SF - var2_SF + 1;
-	bool next_digit = false;
-	bool big; // Is MOD bigger than the part of dividend?
+	_Bool next_digit = FALSE;
+	_Bool big; // Is MOD bigger than the part of dividend?
 
 	numcpy(result, var1);
 
@@ -816,7 +820,7 @@ int get_remainder(char var1[], int var1_SF, bool var1_sign, char var2[], int var
 		MOD_next_digit = 9;
 	for (place = 0; place != goal; place++)
 	{
-		big = false;
+		big = FALSE;
 		if (next_digit)
 		{
 			for (i = MOD_next_digit; i < 9; i++)
@@ -825,7 +829,7 @@ int get_remainder(char var1[], int var1_SF, bool var1_sign, char var2[], int var
 				{
 					if (MOD[i][j] > result[place + j - 1])
 					{
-						big = true;
+						big = TRUE;
 						break;
 					}
 					else if (MOD[i][j] < result[place + j - 1])
@@ -833,7 +837,7 @@ int get_remainder(char var1[], int var1_SF, bool var1_sign, char var2[], int var
 				}
 				if (j == var2_SF && MOD[i][j] == result[place + j - 1])
 				{ // short circuit evaluate prevents segmentation fault.
-					big = false;
+					big = FALSE;
 					i++;
 					break;
 				}
@@ -870,9 +874,9 @@ int get_remainder(char var1[], int var1_SF, bool var1_sign, char var2[], int var
 			}
 
 			if (result[place] != 0)
-				next_digit = true;
+				next_digit = TRUE;
 			else
-				next_digit = false;
+				next_digit = FALSE;
 		}
 		else
 		{
@@ -882,7 +886,7 @@ int get_remainder(char var1[], int var1_SF, bool var1_sign, char var2[], int var
 				{
 					if (MOD[i][j] > result[place + j])
 					{
-						big = true;
+						big = TRUE;
 						break;
 					}
 					else if (MOD[i][j] < result[place + j])
@@ -911,9 +915,9 @@ int get_remainder(char var1[], int var1_SF, bool var1_sign, char var2[], int var
 			}
 
 			if (result[place] != 0)
-				next_digit = true;
+				next_digit = TRUE;
 			else
-				next_digit = false;
+				next_digit = FALSE;
 		}
 	}
 
