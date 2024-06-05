@@ -160,7 +160,7 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], _Bo
 		}
 		else if (input[index_pointer] >= '0' && input[index_pointer] <= '9')
 		{
-			if (previous_operation_element == 1 || previous_operation_element == 3 || buffer_SF > MAX_LENGTH) // if previous op element is variable or number : ex) 100 1 or SF exceeds 30
+			if (previous_operation_element == 1 || previous_operation_element == 3 || buffer_SF >= MAX_LENGTH) // if previous op element is variable or number : ex) 100 1 or SF exceeds 30
 				return -1;
 			if (previous_operation_element != 2 && input[index_pointer] == '0')
 			{ // same as above. ( professor's request. )
