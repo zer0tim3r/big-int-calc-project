@@ -14,16 +14,16 @@ void write_history(char[3][MAX_LENGTH], int[], _Bool[], char[], int, _Bool);
 // definition
 void print_histories(char log[100][108], int log_count, char histories[3][MAX_LENGTH], int histories_SF[], _Bool histories_sign[])
 {
-	int index;
+	int h, i, j, index;
 	int I, J;
 	char temp[46] = {'h', '0', ' ', '=', ' '};
 	int temp_count;
 
-	for (int h = 0; h < 3; h++)
+	for (h = 0; h < 3; h++)
 	{
 		I = histories_SF[h] % 3;
 		J = histories_SF[h] / 3 - 1;
-		for (int i = 5; i < 46; i++)
+		for (i = 5; i < 46; i++)
 			temp[i] = 0;
 		temp[1] = h + '1';
 		temp_count = 5;
@@ -32,7 +32,7 @@ void print_histories(char log[100][108], int log_count, char histories[3][MAX_LE
 			temp[temp_count] = '-';
 			temp_count++;
 		}
-		for (int i = 0; i < I; i++, index++)
+		for (i = 0, index = 0; i < I; i++, index++)
 		{
 			temp[temp_count] = histories[h][index] + '0';
 			temp_count++;
@@ -42,9 +42,9 @@ void print_histories(char log[100][108], int log_count, char histories[3][MAX_LE
 			temp[temp_count] = ',';
 			temp_count++;
 		}
-		for (int i = 0; i < J; i++)
+		for (i = 0; i < J; i++)
 		{
-			for (int j = 0; j < 3; j++, index++)
+			for (j = 0; j < 3; j++, index++)
 			{
 				temp[temp_count] = histories[h][index] + '0';
 				temp_count++;
@@ -54,7 +54,7 @@ void print_histories(char log[100][108], int log_count, char histories[3][MAX_LE
 		}
 		if (J != -1)
 		{
-			for (int j = 0; j < 3; j++, index++)
+			for (j = 0; j < 3; j++, index++)
 			{
 				temp[temp_count] = histories[h][index] + '0';
 				temp_count++;
