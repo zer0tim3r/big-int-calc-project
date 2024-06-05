@@ -20,10 +20,8 @@ void convert_bit_order(char array[], int SF);
 // definition
 int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], _Bool vars_sign[], char historys[3][MAX_LENGTH], int historys_SF[], _Bool historys_sign[], char result[])
 {
-	int i;
-
 	char init[MAX_LENGTH];
-	for (i = 0; i < MAX_LENGTH; i++)
+	for (int i = 0; i < MAX_LENGTH; i++)
 		init[i] = -48;
 
 	char buffer[MAX_LENGTH];
@@ -48,7 +46,7 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], _Bo
 
 	static char int_MAX[MAX_LENGTH] = {2, 1, 4, 7, 4, 8, 3, 6, 4, -1, -48}; // it will be used when processed # operator.
 
-	for (i = 0; i < 50; i++)
+	for (int i = 0; i < 50; i++)
 		operands_sign[i] = TRUE;																 // prepare for unary.
 	for (index_pointer = 0; index_pointer < 100 && input[index_pointer] == ' '; index_pointer++) // short circuit evaluate prevents core dump : out of index
 		;
@@ -271,7 +269,7 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], _Bo
 	else if (previous_operation_element == 0) // expression cannot end with operator.
 		return -1;
 
-	for (i = 0; i < 50; i++) // address initialize
+	for (int i = 0; i < 50; i++) // address initialize
 		address[i] = i;
 
 	// calculate multiple, divide, get_remainder
@@ -365,12 +363,9 @@ int general_calculate(char input[], char vars[5][MAX_LENGTH], int vars_SF[], _Bo
 
 void convert_bit_order(char array[], int SF)
 {
-	char temp;
-	int i, N;
-	N = SF / 2;
-	for (i = 0; i < N; i++)
+	for (int i = 0; i < SF / 2; i++)
 	{
-		temp = array[i];
+		char temp = array[i];
 		array[i] = array[SF - i - 1];
 		array[SF - i - 1] = temp;
 	}
@@ -378,22 +373,16 @@ void convert_bit_order(char array[], int SF)
 
 int sum(char var1[], int var1_SF, _Bool var1_sign, char var2[], int var2_SF, _Bool var2_sign, char result[])
 {
-	int i;
 	_Bool result_sign;
 	int result_SF;
 
-	for (i = 0; i < MAX_LENGTH; i++)
-	{ // initialize result as 0
+	// initialize result as 0
+	for (int i = 0; i < MAX_LENGTH; i++)
 		result[i] = 0;
-	}
-	for (i = var1_SF; i < MAX_LENGTH; i++)
-	{
+	for (int i = var1_SF; i < MAX_LENGTH; i++)
 		var1[i] = 0;
-	}
-	for (i = var2_SF; i < MAX_LENGTH; i++)
-	{
+	for (int i = var2_SF; i < MAX_LENGTH; i++)
 		var2[i] = 0;
-	}
 
 	if (var1_sign == var2_sign)
 	{							 // plus same sign
@@ -411,7 +400,8 @@ int sum(char var1[], int var1_SF, _Bool var1_sign, char var2[], int var2_SF, _Bo
 		}
 		else
 		{ // SF is same. so we have to compare more.
-			for (i = 0; i < var1_SF; i++)
+			int i = 0;
+			for (; i < var1_SF; i++)
 			{
 				if (var1[i] > var2[i])
 				{ // is var1 bigger than var2?
@@ -437,7 +427,7 @@ int sum(char var1[], int var1_SF, _Bool var1_sign, char var2[], int var2_SF, _Bo
 
 	if (result_sign)
 	{
-		for (i = 0; i < 29; i++)
+		for (int i = 0; i < 29; i++)
 		{ // i recycling
 			result[i] += var1[i] + var2[i];
 			result[i + 1] += result[i] / 10;
@@ -454,7 +444,7 @@ int sum(char var1[], int var1_SF, _Bool var1_sign, char var2[], int var2_SF, _Bo
 	}
 	else
 	{
-		for (i = 0; i < 29; i++)
+		for (int i = 0; i < 29; i++)
 		{ // i recycling
 			result[i] += var1[i] + var2[i];
 			result[i + 1] += result[i] / 10;
@@ -470,28 +460,24 @@ int sum(char var1[], int var1_SF, _Bool var1_sign, char var2[], int var2_SF, _Bo
 			return -1;
 	}
 
-	for (i = var1_SF; i < MAX_LENGTH; i++)
-	{
+	for (int i = var1_SF; i < MAX_LENGTH; i++)
 		var1[i] = -48;
-	}
-	for (i = var2_SF; i < MAX_LENGTH; i++)
-	{
+	for (int i = var2_SF; i < MAX_LENGTH; i++)
 		var2[i] = -48;
-	}
 
-	for (i = 29; i > -1; i--)
+	int k = MAX_LENGTH - 1;
+	for (; k > -1; k--)
 	{
-		if (result[i] != 0)
+		if (result[k] != 0)
 			break;
 		else
-			result[i] = -48;
+			result[k] = -48;
 	}
-	if (i == -1)
-	{ // if result is 0
-		i++;
-		result[i] = 0;
-	}
-	result_SF = i + 1;
+
+	// if result is 0
+	if (k == -1) result[++k] = 0;
+
+	result_SF = k + 1;
 
 	convert_bit_order(var1, var1_SF);
 	convert_bit_order(var2, var2_SF);
@@ -503,26 +489,18 @@ int sum(char var1[], int var1_SF, _Bool var1_sign, char var2[], int var2_SF, _Bo
 
 	return result_sign;
 }
+
 int multiple(char var1[], int var1_SF, _Bool var1_sign, char var2[], int var2_SF, _Bool var2_sign, char result[])
 {
-	int i, j;
 	int result_prevent_overflow[MAX_LENGTH];
 	_Bool result_sign;
 	int result_SF;
 	if (var1_SF + var2_SF > 31)
 		return -1;
-	for (i = 0; i < MAX_LENGTH; i++)
-	{ // initialize result as 0
-		result_prevent_overflow[i] = 0;
-	}
-	for (i = var1_SF; i < MAX_LENGTH; i++)
-	{
-		var1[i] = 0;
-	}
-	for (i = var2_SF; i < MAX_LENGTH; i++)
-	{
-		var2[i] = 0;
-	}
+	// initialize result as 0
+	for (int i = 0; i < MAX_LENGTH; i++) result_prevent_overflow[i] = 0;
+	for (int i = var1_SF; i < MAX_LENGTH; i++) var1[i] = 0;
+	for (int i = var2_SF; i < MAX_LENGTH; i++) var2[i] = 0;
 
 	convert_bit_order(var1, var1_SF);
 	convert_bit_order(var2, var2_SF);
@@ -535,44 +513,47 @@ int multiple(char var1[], int var1_SF, _Bool var1_sign, char var2[], int var2_SF
 		result_sign = FALSE;
 	}
 
-	for (i = 0; i < var1_SF; i++)
+	for (int i = 0; i < var1_SF; i++)
 	{
-		for (j = 0; j < var2_SF; j++)
+		for (int j = 0; j < var2_SF; j++)
 		{
 			result_prevent_overflow[i + j] += var1[i] * var2[j];
 		}
 	}
-	i = 0;
-	for (i = 0; i < MAX_LENGTH - 1; i++)
+
+	for (int i = 0; i < MAX_LENGTH - 1; i++)
 	{
 		result_prevent_overflow[i + 1] += result_prevent_overflow[i] / 10;
 		result_prevent_overflow[i] %= 10;
 	}
-	if (result_prevent_overflow[29] > 9)
+
+	if (result_prevent_overflow[MAX_LENGTH - 1] > 9)
 		return -1;
-	for (i = var1_SF; i < MAX_LENGTH; i++)
+
+	for (int i = var1_SF; i < MAX_LENGTH; i++)
 	{
 		var1[i] = -48;
 	}
-	for (i = var2_SF; i < MAX_LENGTH; i++)
+	for (int i = var2_SF; i < MAX_LENGTH; i++)
 	{
 		var2[i] = -48;
 	}
 
-	for (i = 29; i > -1; i--)
+	int k = MAX_LENGTH - 1;
+
+	for (; k > -1; k--)
 	{
-		if (result_prevent_overflow[i] != 0)
+		if (result_prevent_overflow[k] != 0)
 			break;
 		else
-			result_prevent_overflow[i] = -48;
+			result_prevent_overflow[k] = -48;
 	}
-	if (i == -1)
+	if (k == -1)
 	{
-		i++;
-		result_prevent_overflow[i] = 0;
+		result_prevent_overflow[++k] = 0;
 	}
-	result_SF = i + 1;
-	for (i = 0; i < MAX_LENGTH; i++)
+	result_SF = k + 1;
+	for (int i = 0; i < MAX_LENGTH; i++)
 	{
 		result[i] = result_prevent_overflow[i];
 	}

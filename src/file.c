@@ -12,21 +12,20 @@ void read_file(char[5][MAX_LENGTH], int[], _Bool[], char[3][MAX_LENGTH], int[], 
 // definition
 void write_file(char vars[5][MAX_LENGTH], int vars_SF[], _Bool vars_sign[], char histories[3][MAX_LENGTH], int histories_SF[], _Bool histories_sign[])
 {
-	int i, j;
 	FILE *out = fopen("cal.txt", "w");
 
-	for (i = 0; i < 5; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		putc(vars_sign[i] ? '+' : '-', out);
-		for (j = 0; j < vars_SF[i]; j++)
+		for (int j = 0; j < vars_SF[i]; j++)
 			putc(vars[i][j] + '0', out);
 		putc('\n', out);
 	}
 
-	for (i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		putc(histories_sign[i] ? '+' : '-', out);
-		for (j = 0; j < histories_SF[i]; j++)
+		for (int j = 0; j < histories_SF[i]; j++)
 			putc(histories[i][j] + '0', out);
 		putc('\n', out);
 	}

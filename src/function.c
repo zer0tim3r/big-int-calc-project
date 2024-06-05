@@ -51,7 +51,7 @@ void print_output(char log[100][108], int log_count, char output[])
 
 void print_num(char log[100][108], int log_count, char var[], int SF, _Bool sign)
 {
-	int i, j, index;
+	int index = 0;
 	int I = SF % 3, J = SF / 3 - 1;
 	char temp[41] = {0};
 	int temp_count = 0;
@@ -61,7 +61,7 @@ void print_num(char log[100][108], int log_count, char var[], int SF, _Bool sign
 		temp[temp_count] = '-';
 		temp_count++;
 	}
-	for (i = 0, index = 0; i < I; i++, index++)
+	for (int i = 0; i < I; i++, index++)
 	{
 		temp[temp_count] = var[index] + '0';
 		temp_count++;
@@ -71,9 +71,9 @@ void print_num(char log[100][108], int log_count, char var[], int SF, _Bool sign
 		temp[temp_count] = ',';
 		temp_count++;
 	}
-	for (i = 0; i < J; i++)
+	for (int i = 0; i < J; i++)
 	{
-		for (j = 0; j < 3; j++, index++)
+		for (int j = 0; j < 3; j++, index++)
 		{
 			temp[temp_count] = var[index] + '0';
 			temp_count++;
@@ -83,7 +83,7 @@ void print_num(char log[100][108], int log_count, char var[], int SF, _Bool sign
 	}
 	if (J != -1)
 	{
-		for (j = 0; j < 3; j++, index++)
+		for (int j = 0; j < 3; j++, index++)
 		{
 			temp[temp_count] = var[index] + '0';
 			temp_count++;
@@ -94,11 +94,11 @@ void print_num(char log[100][108], int log_count, char var[], int SF, _Bool sign
 
 void print_num_withoutLog(char var[], int SF, _Bool sign)
 {
-	int i, j, index;
+	int index = 0;
 	int I = SF % 3, J = SF / 3 - 1;
 	if (!sign && var[0] != 0)
 		putchar('-');
-	for (i = 0, index = 0; i < I; i++, index++)
+	for (int i = 0; i < I; i++, index++)
 	{
 		putchar(var[index] + '0');
 	}
@@ -106,9 +106,9 @@ void print_num_withoutLog(char var[], int SF, _Bool sign)
 	{
 		putchar(',');
 	}
-	for (i = 0; i < J; i++)
+	for (int i = 0; i < J; i++)
 	{
-		for (j = 0; j < 3; j++, index++)
+		for (int j = 0; j < 3; j++, index++)
 		{
 			putchar(var[index] + '0');
 		}
@@ -116,7 +116,7 @@ void print_num_withoutLog(char var[], int SF, _Bool sign)
 	}
 	if (J != -1)
 	{
-		for (j = 0; j < 3; j++, index++)
+		for (int j = 0; j < 3; j++, index++)
 		{
 			putchar(var[index] + '0');
 		}
