@@ -543,7 +543,7 @@ int multiple(char var1[], int var1_SF, _Bool var1_sign, char var2[], int var2_SF
 		}
 	}
 	i = 0;
-	for (i = 0; i < MAX_LENGTH; i++)
+	for (i = 0; i < MAX_LENGTH - 1; i++)
 	{
 		result_prevent_overflow[i + 1] += result_prevent_overflow[i] / 10;
 		result_prevent_overflow[i] %= 10;
